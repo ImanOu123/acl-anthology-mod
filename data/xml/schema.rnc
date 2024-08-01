@@ -52,6 +52,12 @@ Paper = element paper {
   attribute ingest-date { xsd:date }?,
   attribute type { xsd:string }?,
   (element abstract { MarkupText }?
+   & element abstract_en { MarkupText }?
+   & element abstract_ar { MarkupText }?
+   & element abstract_fr { MarkupText }?
+   & element abstract_ja { MarkupText }?
+   & element abstract_ru { MarkupText }?
+   & element abstract_zh { MarkupText }?
    & attachment*
    & element bibkey { bibtex-key }
    & element author { Person }*
@@ -81,6 +87,12 @@ Paper = element paper {
    & element note { text }?
    & element pages { text }?
    & element title { MarkupText }
+   & element title_ar { MarkupText }?
+   & element title_fr { MarkupText }?
+   & element title_en { MarkupText }?
+   & element title_ru { MarkupText }?
+   & element title_zh { MarkupText }?
+   & element title_ja { MarkupText }?
    & url-with-checksum?
    & element video {
        attribute href { xsd:anyURI },

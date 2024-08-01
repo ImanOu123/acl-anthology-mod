@@ -38,7 +38,12 @@
 {{ define "javascript" }}
 <script src="{{ "/js/clipboard.min.js" | relURL }}"></script>
 <script>
+
+  let lang_codes = ['ar', 'zh', 'en', 'fr', 'ja', 'ru']
+  let languages = ['Arabic', 'Chinese', 'English', 'French', 'Japanese', 'Russian']
+
   $( document ).ready(function() {
+      create_buttons();
       if (ClipboardJS.isSupported()) {
           success_fn = function(e) {
               // turns button into "copy successful"-style for 2 seconds
@@ -70,6 +75,52 @@
           $(".btn-clipboard-outside").removeClass("d-none");
       }
   });
+
+  // translation functions
+
+  $("#lang_query").on("input", function(e) {
+      var input = $(this);
+      var val = input.val();
+      let button_div = document.getElementById("buttons");
+      button_div.innerHTML = "";
+
+      if (input.data("lastval") != val) {
+        input.data("lastval", val);
+
+        //your change action goes here
+        for(let idx in languages){
+          let lang = languages[idx];
+          let code = lang_codes[idx];
+          if(lang.includes(val))
+            button_div.innerHTML += `<button class='btn btn-secondary' onclick="show_lang('${code}')" data-dismiss='modal' style='margin:10px; width:120px; text-align: center;'><span class='pl-2'>${lang}</span></button>`;
+      }
+    }
+  });
+
+  function create_buttons(){
+    let button_div = document.getElementById("buttons");
+    for(let idx in languages){
+      let lang = languages[idx];
+      let code = lang_codes[idx];
+      button_div.innerHTML += `<button class='btn btn-secondary' onclick="show_lang('${code}')" data-dismiss='modal' style='margin:10px; width:120px; text-align: center;'><span class='pl-2'>${lang}</span></button>`;
+    }
+  }
+
+  function show_lang(lang){
+    hide_all();
+    console.log(lang);
+    $("#"+lang+"_abstract").show();
+    $("#"+lang+"_title").show();
+  }
+
+  function hide_all(){
+    for (let x in lang_codes){
+        let code = lang_codes[x];
+        $("#"+code+"_abstract").hide();
+        $("#"+code+"_title").hide();
+    }
+  }
+
 </script>
 {{ end }}
 
@@ -84,10 +135,41 @@
   <div>
   <h2 id="title">
     {{ with $paper.pdf }}
-    <a href="{{ . }}">{{ $paper.title_html | safeHTML }}</a>
+      <a id="en_title" href="{{ . }}">{{ $paper.title_html | safeHTML }}</a>
+
+      {{ if $paper.title_ar }}
+        <a id='ar_title' style='display:none;' href='{{ . }}'>{{ $paper.title_ar | safeHTML }}</a>
+        <a id='fr_title' style='display:none;' href='{{ . }}'>{{ $paper.title_fr | safeHTML }}</a>
+        <a id='ja_title' style='display:none;' href='{{ . }}'>{{ $paper.title_ja | safeHTML }}</a>
+        <a id='ru_title' style='display:none;' href='{{ . }}'>{{ $paper.title_ru | safeHTML }}</a>
+        <a id='zh_title' style='display:none;' href='{{ . }}'>{{ $paper.title_zh | safeHTML }}</a>
+      {{ else }}
+        <!-- temp until translator added -->
+        <a id='ar_title' style='display:none;' href='{{ . }}'>{{ $paper.title_html | safeHTML }}</a>
+        <a id='fr_title' style='display:none;' href='{{ . }}'>{{ $paper.title_html | safeHTML }}</a>
+        <a id='ja_title' style='display:none;' href='{{ . }}'>{{ $paper.title_html | safeHTML }}</a>
+        <a id='ru_title' style='display:none;' href='{{ . }}'>{{ $paper.title_html | safeHTML }}</a>
+        <a id='zh_title' style='display:none;' href='{{ . }}'>{{ $paper.title_html | safeHTML }}</a>
+      {{ end }}
     {{ else }}
-      {{ $paper.title_html | safeHTML }}
+      <div id="en_title">{{ $paper.title_html | safeHTML }}</div>
+
+      {{ if $paper.title_ar }}
+        <div id='ar_title' style='display:none;'>{{ $paper.title_ar | safeHTML }}</div>
+        <div id='fr_title' style='display:none;'>{{ $paper.title_fr | safeHTML }}</div>
+        <div id='ja_title' style='display:none;'>{{ $paper.title_ja | safeHTML }}</div>
+        <div id='ru_title' style='display:none;'>{{ $paper.title_ru | safeHTML }}</div>
+        <div id='zh_title' style='display:none;'>{{ $paper.title_zh | safeHTML }}</div>
+      {{ else }}
+       <!-- temp until translator added -->
+        <div id='ar_title' style='display:none;'>{{ $paper.title_html | safeHTML }}</div>
+        <div id='fr_title' style='display:none;'>{{ $paper.title_html | safeHTML }}</div>
+        <div id='ja_title' style='display:none;'>{{ $paper.title_html | safeHTML }}</div>
+        <div id='ru_title' style='display:none;'>{{ $paper.title_html | safeHTML }}</div>
+        <div id='zh_title' style='display:none;'>{{ $paper.title_html | safeHTML }}</div>
+      {{ end }}
     {{ end }}
+
   </h2>
   {{ with $paper.author }}
   <p class="lead">
@@ -116,7 +198,7 @@
       {{ end }}
 
       {{ with $paper.abstract_html }}
-      <div class="card bg-light mb-2 mb-lg-3">
+      <div class="card bg-light mb-2 mb-lg-3" id="en_abstract">
         <div class="card-body acl-abstract">
           <h5 class="card-title">Abstract</h5>
           <span {{ with $paper.retracted }} style="text-decoration: line-through" {{ end }}>
@@ -124,6 +206,107 @@
           </span>
         </div>
       </div>
+      {{ end }}
+
+      {{ if $paper.abstract_ar}}
+        {{ with $paper.abstract_ar }}
+        <div class="card bg-light mb-2 mb-lg-3" id="ar_abstract" style="display:none;">
+          <div class="card-body acl-abstract">
+            <h5 class="card-title">Abstract</h5>
+            <span {{ with $paper.retracted }} style="text-decoration: line-through;" {{ end }}>
+                {{ . | safeHTML }}
+            </span>
+          </div>
+        </div>
+        {{ end }}
+
+        {{ with $paper.abstract_fr }}
+        <div class="card bg-light mb-2 mb-lg-3" id="fr_abstract" style="display:none;">
+          <div class="card-body acl-abstract">
+            <h5 class="card-title">Abstract</h5>
+            <span {{ with $paper.retracted }} style="text-decoration: line-through;" {{ end }}>
+                {{ . | safeHTML }}
+            </span>
+          </div>
+        </div>
+        {{ end }}
+
+        {{ with $paper.abstract_ru }}
+        <div class="card bg-light mb-2 mb-lg-3" id="ru_abstract" style="display:none;">
+          <div class="card-body acl-abstract">
+            <h5 class="card-title">Abstract</h5>
+            <span {{ with $paper.retracted }} style="text-decoration: line-through;" {{ end }}>
+                {{ . | safeHTML }}
+            </span>
+          </div>
+        </div>
+        {{ end }}
+
+        {{ with $paper.abstract_zh }}
+        <div class="card bg-light mb-2 mb-lg-3" id="zh_abstract" style="display:none;">
+          <div class="card-body acl-abstract">
+            <h5 class="card-title">Abstract</h5>
+            <span {{ with $paper.retracted }} style="text-decoration: line-through;" {{ end }}>
+                {{ . | safeHTML }}
+            </span>
+          </div>
+        </div>
+        {{ end }}
+
+        {{ with $paper.abstract_ja }}
+        <div class="card bg-light mb-2 mb-lg-3" id="ja_abstract" style="display:none;">
+          <div class="card-body acl-abstract">
+            <h5 class="card-title">Abstract</h5>
+            <span {{ with $paper.retracted }} style="text-decoration: line-through;" {{ end }}>
+                {{ . | safeHTML }}
+            </span>
+          </div>
+        </div>
+        {{ end }}
+      {{ else }}
+        <!-- temp until translator added -->
+        {{ with $paper.abstract_html }}
+        <div class="card bg-light mb-2 mb-lg-3" id="ar_abstract" style="display:none;">
+          <div class="card-body acl-abstract">
+            <h5 class="card-title">Abstract</h5>
+            <span {{ with $paper.retracted }} style="text-decoration: line-through;" {{ end }}>
+                {{ . | safeHTML }}
+            </span>
+          </div>
+        </div>
+        <div class="card bg-light mb-2 mb-lg-3" id="fr_abstract" style="display:none;">
+          <div class="card-body acl-abstract">
+            <h5 class="card-title">Abstract</h5>
+            <span {{ with $paper.retracted }} style="text-decoration: line-through;" {{ end }}>
+                {{ . | safeHTML }}
+            </span>
+          </div>
+        </div>
+        <div class="card bg-light mb-2 mb-lg-3" id="ja_abstract" style="display:none;">
+          <div class="card-body acl-abstract">
+            <h5 class="card-title">Abstract</h5>
+            <span {{ with $paper.retracted }} style="text-decoration: line-through;" {{ end }}>
+                {{ . | safeHTML }}
+            </span>
+          </div>
+        </div>
+        <div class="card bg-light mb-2 mb-lg-3" id="ru_abstract" style="display:none;">
+          <div class="card-body acl-abstract">
+            <h5 class="card-title">Abstract</h5>
+            <span {{ with $paper.retracted }} style="text-decoration: line-through;" {{ end }}>
+                {{ . | safeHTML }}
+            </span>
+          </div>
+        </div>
+        <div class="card bg-light mb-2 mb-lg-3" id="zh_abstract" style="display:none;">
+          <div class="card-body acl-abstract">
+            <h5 class="card-title">Abstract</h5>
+            <span {{ with $paper.retracted }} style="text-decoration: line-through;" {{ end }}>
+                {{ . | safeHTML }}
+            </span>
+          </div>
+        </div>
+        {{ end }}
       {{ end }}
 
     <!-- To avoid cluttering this template with Bootstrap classes, the styling
@@ -285,6 +468,7 @@
         </dd>
       {{ end }}
 
+
     </dl>
     </div>
 
@@ -324,6 +508,15 @@
       </a>
         {{ end }}
       {{ end }}
+
+      <!-- translation button on side -->
+      {{ with $paper.abstract_html }}
+        <a class="btn btn-dark" data-toggle="modal" data-target="#translateModal" title="Translate for '{{ $paper.title | htmlEscape }}'"
+          style="color: white;">
+          <i class="fas fa-language"></i><span class="pl-2">Translate</span>
+        </a>
+      {{ end }}
+
       {{ range $paper.attachment }}
       <a class="btn btn-attachment d-flex flex-wrap justify-content-center" href="{{ .url }}" title="Open {{ .type | humanize | lower }} for '{{ $paper.title | htmlEscape }}'">
         <span class="align-self-center px-1">{{ partial "attachment_repr.html" . -}}</span>
@@ -336,6 +529,9 @@
         <span class="px-1">Video</span>
       </a>
       {{ end }}
+
+
+
     </div>
   </div>
   <hr />
@@ -425,5 +621,24 @@
       </div>
     </div>
   </div>
+
+  <!-- translation pop-up -->
+  <div class="modal fade" id="translateModal" tabindex="-1" role="dialog" aria-labelledby="translateModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="citeModalLabel"><i class="fas fa-language"></i> Translate</h5>
+        <button class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="text-align: center;">
+        <input id="lang_query" type="text" class="form-control mr-sm-2" style="width:50%; margin: 0 auto!important" name="language" placeholder="Search..."/><br>
+        <div id="buttons"></div>
+      </div>
+    </div>
+  </div>
+
 </section>
 {{ end }}
