@@ -94,7 +94,7 @@
         for(let idx in languages){
           let lang = languages[idx];
           let code = lang_codes[idx];
-          if(lang.includes(val))
+          if(lang.match(RegExp(val,'i')))
             button_div.innerHTML += `<button class='btn btn-secondary' onclick="show_lang('${code}')" data-dismiss='modal' style='margin:10px; width:120px; text-align: center;'><span class='pl-2'>${lang}</span></button>`;
       }
     }
@@ -133,11 +133,13 @@
       document.getElementById(lang+"_title").innerHTML = translatedTitle;
 
       // translate abstract to target language
-      const translatedAbstract = await translation("{{$paper.abstract_html}}", lang)
-      document.getElementById(lang+"_abstract").innerHTML = translatedAbstract;
+      if ('{{$paper.abstract_html}}'){
+        const translatedAbstract = await translation("{{$paper.abstract_html}}", lang)
+        document.getElementById(lang+"_abstract").innerHTML = translatedAbstract;
+      }
 
-      console.log(translatedTitle)
-      console.log(translatedAbstract)
+      // console.log(translatedTitle)
+      // console.log(translatedAbstract)
     }
 
     $("#"+lang+"_abstract").show();
@@ -218,7 +220,7 @@
           </span>
         </div>
       </div>
-      {{ end }}
+
 
       <div class="card bg-light mb-2 mb-lg-3" id="ar_abstract" style="display:none;">
         <div class="card-body acl-abstract">
@@ -254,6 +256,7 @@
           <span {{ with $paper.retracted }} style="text-decoration: line-through;" {{ end }}></span>
         </div>
       </div>
+    {{ end }}
 
     <!-- To avoid cluttering this template with Bootstrap classes, the styling
     for this list is defined in assets/css/_papers.scss -->
