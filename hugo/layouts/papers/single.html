@@ -110,17 +110,20 @@
   }
 
   async function translation(text, lang) {
-    const res = await fetch("http://127.0.0.1:5000/translate", {
+    const idx = lang_codes.indexOf(lang)
+    const full_lang = languages[idx]
+    console.log(idx, full_lang)
+    const res = await fetch("http://localhost:8765/translate", {
       method: "POST",
       body: JSON.stringify({
-        q: text,
-        source: "en",
-        target: lang
+        text: text,
+        src_lang: "English",
+        tgt_lang: full_lang
       }),
-      headers: { "Content-Type": "application/json" }
+      headers: {"Content-Type": "application/json"}
     });
     const data = await res.json()
-    return data.translatedText
+    return data.translated_text
   }
 
   async function show_lang(lang){
