@@ -44,44 +44,7 @@
 
   let lang_codes = ['ar', 'zh', 'en', 'fr', 'ja', 'ru']
   let languages = ['Arabic', 'Chinese', 'English', 'French', 'Japanese', 'Russian']
-  let sample1 = `<div style="width: 100%; display: table;">
-            <div style="display: table-row">
-              <div style="display: table-cell; padding: 5px"> <b>Seamless</b> </div>
-              <div style="display: table-cell; padding: 5px"> <b>Prompt Refinement</b> </div>
-            </div>
-            <div style="display: table-row">
-                <div dir="rtl" align="right" style="width: 50%; display: table-cell; padding: 10px">يعد <mark style="background-color: #FFCCCB">التعرف على الكيان المسمى</mark> عنصراً رئيسياً في استخراج المعلومات (IE) ، خاصة في المجالات العلمية مثل الطب الحيوي والكيمياء ، حيث لا تفي نماذج اللغة الكبيرة (LLMs) ، مثل ChatGPT ، بالجزية.
-                  نحن نحقق في قابلية تطبيق <mark style="background-color: #FFCCCB">التعلم التحويلية</mark> لتعزيز نموذج التعرف على الكيان المسمى المدرب في المجال الطبي الحيوي (مجال المصدر) لاستخدامه في المجال الكيميائي (<mark style="background-color: #FFCCCB">المجال المستهدف</mark>).
-                  الممارسة الشائعة لتدريب مثل هذا النموذج في إعداد <mark style="background-color: #FFCCCB">التعلم لبضع لقطات</mark> هي تدريب النموذج مسبقًا على بيانات المصدر المسمّاة ، ثم صقلها على عدد قليل من الأمثلة المستهدفة المسمّاة.
-                  في تجاربنا، لاحظنا أن مثل هذا النموذج عرضة لتسمية الكيانات المصدرية، التي يمكن أن تظهر في كثير من الأحيان في النص، ككيانات الهدف.
-                  لتخفيف هذه المشكلة، نقترح نموذجًا لنقل المعرفة من مجال المصدر إلى <mark style="background-color: #FFCCCB">مجال الهدف</mark>، ولكن في نفس الوقت، لإظهار كيانات المصدر والكيانات المستهدفة في مناطق منفصلة من <mark style="background-color: #FFCCCB">مساحة الميزة</mark>.
-                  هذا يقلل من خطر وضع علامات خاطئة على الكيانات المصدرية ككيانات الهدف. يتكون نموذجنا من مرحلتين: 1) تجميع الكيانات في مجال المصدر، والذي يتضمن المعرفة من الأحداث المعلنة لإقامة علاقات بين الكيانات، و 2) تمييز الكيانات في <mark style="background-color: #FFCCCB">مجال الهدف،</mark> والذي يعتمد على وضع علامات زائفة والتعلم التبايني لتعزيز التمييز بين الكيانات في المجالين.
-                  نقوم بتجاربنا الواسعة على ثلاث مجموعات بيانات مصدر وثلاث مجموعات بيانات هدف، مما يدل على أن طريقةنا تتفوق على خطوط الأساس بنسبة تصل إلى 5% من القيمة المطلقة.
-                  الرمز والبيانات والموارد متاحة للجمهور لأغراض البحث: https://github.com/Lhtie/Bio-Domain-Transfer.</div>
-                <div dir="rtl" align="right" style="display: table-cell; padding: 10px"> يعد <mark style="background-color: #90EE90">التعرف على الكيانات المسماة</mark> عنصراً رئيسياً في استخراج المعلومات (IE) ، خاصة في المجالات العلمية مثل الطب الحيوي والكيمياء ، حيث لا تفي نماذج اللغة الكبيرة (LLMs) ، مثل ChatGPT ، بالجزية.
-                  نحن نحقق في قابلية تطبيق <mark style="background-color: #90EE90">تعُّلم منقول</mark> لتعزيز نموذج التعرف على الكيانات المسماة المدرب في المجال الطبي الحيوي (مجال المصدر) لاستخدامه في المجال الكيميائي (<mark style="background-color: #90EE90">النطاق المستهدف</mark>).
-                  الممارسة الشائعة لتدريب مثل هذا النموذج في إعداد <mark style="background-color: #90EE90">تعلم بأمثلة قليلة</mark> هي تدريب النموذج مسبقًا على بيانات مصدر المسمّاة ، ثم صقلها على عدد قليل من الأمثلة الهدف المسمّاة.
-                  في تجاربنا، لاحظنا أن مثل هذا النموذج عرضة لتسمية الكيانات مصدر، التي يمكن أن تظهر في كثير من الأحيان في النص، ككيانات الهدف.
-                  لتخفيف هذه المشكلة، نقترح نموذجًا لنقل المعرفة من مجال المصدر إلى <mark style="background-color: #90EE90">النطاق المستهدف</mark>، ولكن في نفس الوقت، لإظهار كيانات المصدر والكيانات المستهدفة في مناطق منفصلة من <mark style="background-color: #90EE90">فضاء السمات</mark>.
-                  هذا يقلل من خطر وضع علامات خاطئة على الكيانات مصدر ككيانات الهدف. يتكون نموذجنا من مرحلتين: 1) تجميع الكيانات في مجال المصدر، والذي يتضمن المعرفة من الأحداث المعلنة لإقامة علاقات بين الكيانات، و 2) تمييز الكيانات في <mark style="background-color: #90EE90">النطاق المستهدف</mark>، والذي يعتمد على وضع علامات زائفة والتعلم التبايني لتعزيز التمييز بين الكيانات في المجالين.
-                  نقوم بتجاربنا الواسعة على ثلاث مجموعات بيانات مصدر وثلاث مجموعات بيانات هدف، مما يدل على أن طريقةنا تتفوق على خطوط الأساس بنسبة تصل إلى 5% من القيمة المطلقة.
-                  الرمز والبيانات والموارد متاحة للجمهور لأغراض البحث: https://github.com/Lhtie/Bio-Domain-Transfer. </div>
-            </div>
-        </div>`
-  let sample2 = `<div dir="rtl" align="right" style="width: 50%; display: table-cell; padding: 10px">يهدف الكشف عن السخرية متعددة الوسائط إلى تحديد السخرية في أزواج الصورة والنص المعطاة وله تطبيقات واسعة في المجالات متعددة الوسائط.
-                  تعمل الأعمال السابقة في المقام الأول على تصميم هياكل شبكة معقدة لدمج <mark style="background-color: #FFCCCB">ميزات طريقة الصورة والنص</mark> للتصنيف.
-                  ومع ذلك ، قد تتعرض هذه الهياكل المعقدة لخطر <mark style="background-color: #FFCCCB">الإفراط في التكييف</mark> على <mark style="background-color: #FFCCCB">البيانات داخل المجال</mark> ، مما يقلل من الأداء في سيناريوهات خارج التوزيع (OOD).
-                  بالإضافة إلى ذلك ، عادة ما لا تستخدم الأساليب القائمة <mark style="background-color: #FFCCCB">الميزات المتداخلة</mark> بشكل كامل ، مما يحد من أدائها على مجموعات <mark style="background-color: #FFCCCB">البيانات داخل المجال</mark>.
-                  لذلك، لبناء نموذج أكثر موثوقية للكشف عن السخرية متعددة الوسائط، نقترح نموذج السخرية متعددة الوسائط التوليدية الذي يتكون من قالب تعليمات مصمم ووحدة <mark style="background-color: #FFCCCB">استرداد عرض مبنية</mark> على <mark style="background-color: #FFCCCB">نموذج اللغة الكبيرة</mark>.
-                  علاوة على ذلك ، لتقييم تعميم الأساليب الحالية ، نقدم مجموعة اختبار OOD ، RedEval.
-                  تظهر النتائج التجريبية أن <mark style="background-color: #FFCCCB">طريقةنا فعالة</mark> وتحقيق أداء الدولة من الفن (SOTA) على مجموعات <mark style="background-color: #FFCCCB">البيانات في المجال</mark> MMSD2.0 و OOD RedEval.</div>
-                <div dir="rtl" align="right" style="display: table-cell; padding: 10px">يهدف الكشف عن السخرية متعددة الوسائط إلى تحديد السخرية في أزواج الصورة والنص المعطاة وله تطبيقات واسعة في المجالات متعددة الوسائط.
-                  تعمل الأعمال السابقة في المقام الأول على تصميم هياكل الشبكة المعقدة لدمج <mark style="background-color: #90EE90">ميزات نمط الصورة والنص</mark> للتصنيف.
-                  ومع ذلك ، قد تتعرض هذه الهياكل المعقدة لخطر <mark style="background-color: #90EE90">فرط التخصيص</mark> على <mark style="background-color: #90EE90">البيانات ضمن المجال</mark> ، مما يقلل من الأداء في سيناريوهات خارج التوزيع (OOD).
-                  بالإضافة إلى ذلك ، عادة ما لا تستخدم الأساليب القائمة <mark style="background-color: #90EE90">الميزات عبر الوسائط</mark> بشكل كامل ، مما يحد من أدائها على مجموعات <mark style="background-color: #90EE90">البيانات ضمن المجال</mark>.
-                  لذلك، لبناء نموذج أكثر موثوقية للكشف عن السخرية متعددة الوسائط، نقترح نموذج السخرية متعددة الوسائط التوليدية الذي يتكون من قالب تعليمات مصمم ووحدة <mark style="background-color: #90EE90">الاسترجاع المبنية</mark> على <mark style="background-color: #90EE90">نموذج لغوي كبير</mark>.
-                  علاوة على ذلك ، لتقييم التعميم للأساليب الحالية ، نقدم مجموعة الاختبار OOD ، RedEval.
-                  تظهر النتائج التجريبية أن <mark style="background-color: #90EE90">طريقتنا فعالة</mark> وتحقيق أداء الدولة من الفن (SOTA) على مجموعات <mark style="background-color: #90EE90">البيانات ضمن المجال</mark> MMSD2.0 و OOD RedEval.</div>`
+
   $( document ).ready(function() {
       create_buttons();
       if (ClipboardJS.isSupported()) {
@@ -146,22 +109,59 @@
     }
   }
 
-  async function translation(text, lang, mode) {
-    const idx = lang_codes.indexOf(lang)
-    const full_lang = languages[idx]
-    console.log(idx, full_lang)
-    const res = await fetch("http://127.0.0.1:8765/translate", {
-      method: "POST",
-      body: JSON.stringify({
-        text: text,
-        src_lang: "English",
-        tgt_lang: full_lang,
-        mode: mode
-      }),
-      headers: {"Content-Type": "application/json"}
-    });
-    const data = await res.json()
-    return data.translated_text
+  async function translation(text, lang, mode, seamless="") {
+    try{
+      const idx = lang_codes.indexOf(lang)
+      const full_lang = languages[idx]
+      console.log(idx, full_lang)
+      const res = await fetch("http://127.0.0.1:8765/translate", {
+        method: "POST",
+        body: JSON.stringify({
+          text: text,
+          src_lang: "English",
+          tgt_lang: full_lang,
+          mode: mode,
+          seamless : seamless
+        }),
+        headers: {"Content-Type": "application/json; charsetUTF-8"}
+      });
+
+      // error check
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
+
+      const data = await res.json()
+      return data.translated_text
+
+    } catch (error) {
+      return ""
+    }
+  }
+
+  async function mark(trans1, trans2, lang) {
+    try{
+      const res = await fetch("http://127.0.0.1:8765/mark", {
+        method: "POST",
+        body: JSON.stringify({
+          seamless : trans1,
+          prompt : trans2,
+          lang : lang
+        }),
+        headers: {"Content-Type": "application/json; charsetUTF-8"}
+      });
+
+      // error check
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
+
+      const data = await res.json()
+      return data.marked_translations
+     } catch (error) {
+      return []
+    }
+
   }
 
   async function show_lang(lang){
@@ -176,26 +176,48 @@
       document.getElementById(lang+"_title").innerHTML = "{{$paper.title}}"
       $("#"+lang+"_title").show();
       // temporary loading text
-      document.getElementById(lang+"_abstract").innerHTML = 'Translating...'
+      const idx = lang_codes.indexOf(lang)
+      const full_lang = languages[idx]
+      document.getElementById(lang+"_abstract").innerHTML = 'Translating to ' + full_lang + '...'
       $("#"+lang+"_abstract").show();
 
       // translate abstract to target language
       if ('{{$paper.abstract_html}}'){
         const seamlessTranslatedAbstract = await translation("{{$paper.abstract_html}}", lang, "direct")
-        const promptTranslatedAbstract = await translation("{{$paper.abstract_html}}", lang, "term_aware")
-        // const promptTranslatedAbstract = ""
-        // console.log(seamlessTranslatedAbstract, promptTranslatedAbstract)
-        document.getElementById(lang+"_abstract").innerHTML =
-        `<div style="width: 100%; display: table;">
-            <div style="display: table-row">
-              <div style="display: table-cell; padding: 5px"> <b>Seamless</b> </div>
-              <div style="display: table-cell; padding: 5px"> <b>Prompt Refinement</b> </div>
-            </div>
-            <div style="display: table-row">
-                <div style="width: 50%; display: table-cell; padding: 10px">${seamlessTranslatedAbstract}</div>
-                <div style="display: table-cell; padding: 10px">${promptTranslatedAbstract}</div>
-            </div>
-        </div>`
+        const promptTranslatedAbstract = await translation("{{$paper.abstract_html}}", lang, "term_aware", seamlessTranslatedAbstract)
+
+        const transList = await mark(seamlessTranslatedAbstract, promptTranslatedAbstract, lang)
+
+        if (transList != []){
+          if (lang == "ar"){
+            document.getElementById(lang+"_abstract").innerHTML =
+            `<div style="width: 100%; display: table;">
+                <div style="display: table-row">
+                  <div style="display: table-cell; padding: 5px"> <b>Seamless</b> </div>
+                  <div style="display: table-cell; padding: 5px"> <b>Prompt Refinement</b> </div>
+                </div>
+                <div style="display: table-row">
+                    <div dir="rtl" align="right" style="width: 50%; display: table-cell; padding: 10px">${transList[0]}</div>
+                    <div dir="rtl" align="right" style="display: table-cell; padding: 10px">${transList[1]}</div>
+                </div>
+            </div>`
+          } else {
+            document.getElementById(lang+"_abstract").innerHTML =
+            `<div style="width: 100%; display: table;">
+                <div style="display: table-row">
+                  <div style="display: table-cell; padding: 5px"> <b>Seamless</b> </div>
+                  <div style="display: table-cell; padding: 5px"> <b>Prompt Refinement</b> </div>
+                </div>
+                <div style="display: table-row">
+                    <div style="width: 50%; display: table-cell; padding: 10px">${transList[0]}</div>
+                    <div style="display: table-cell; padding: 10px">${transList[1]}</div>
+                </div>
+            </div>`
+          }
+        }
+        else {
+          document.getElementById(lang+"_abstract").innerHTML = "Error"
+        }
       }
 
     }
