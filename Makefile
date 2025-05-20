@@ -101,20 +101,20 @@ endif
 VENV := "venv/bin/activate"
 
 .PHONY: site
-site: build/.hugo build/.sitemap
+site: build/.hugo # build/.sitemap
 
 
 # Split the file sitemap into Google-ingestible chunks.
 # Also build the PDF sitemap, and split it.
-.PHONY: sitemap
-sitemap: build/.sitemap
+# .PHONY: sitemap
+# sitemap: build/.sitemap
 
-build/.sitemap: venv/bin/activate build/.hugo
-	. $(VENV) && python3 bin/split_sitemap.py build/website/$(ANTHOLOGYDIR)/sitemap.xml
-	@rm -f build/website/$(ANTHOLOGYDIR)/sitemap_*.xml.gz
-	@gzip -9n build/website/$(ANTHOLOGYDIR)/sitemap_*.xml
-	@bin/create_sitemapindex.sh `ls build/website/$(ANTHOLOGYDIR)/ | grep 'sitemap_.*xml.gz'` > build/website/$(ANTHOLOGYDIR)/sitemapindex.xml
-	@touch build/.sitemap
+# build/.sitemap: venv/bin/activate build/.hugo
+# 	. $(VENV) && python3 bin/split_sitemap.py build/website/$(ANTHOLOGYDIR)/sitemap.xml
+# 	@rm -f build/website/$(ANTHOLOGYDIR)/sitemap_*.xml.gz
+# 	@gzip -9n build/website/$(ANTHOLOGYDIR)/sitemap_*.xml
+# 	@bin/create_sitemapindex.sh `ls build/website/$(ANTHOLOGYDIR)/ | grep 'sitemap_.*xml.gz'` > build/website/$(ANTHOLOGYDIR)/sitemapindex.xml
+# 	@touch build/.sitemap
 
 .PHONY: venv
 venv: venv/bin/activate
