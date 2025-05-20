@@ -42,12 +42,7 @@
 <script src="{{ relURL "js/clipboard.min.js" }}"></script>
 <script src="{{ relURL "js/FileSaver.js" }}"></script>
 <script>
-
-  let lang_codes = ['ar', 'zh', 'en', 'fr', 'ja', 'ru']
-  let languages = ['Arabic', 'Chinese', 'English', 'French', 'Japanese', 'Russian']
-
   $( document ).ready(function() {
-      create_buttons();
       if (ClipboardJS.isSupported()) {
           success_fn = function(e) {
               // turns button into "copy successful"-style for 2 seconds
@@ -79,161 +74,6 @@
           $(".btn-clipboard-outside").removeClass("d-none");
       }
   });
-
-  // translation functions
-
-  $("#lang_query").on("input", function(e) {
-      var input = $(this);
-      var val = input.val();
-      let button_div = document.getElementById("buttons");
-      button_div.innerHTML = "";
-
-      if (input.data("lastval") != val) {
-        input.data("lastval", val);
-
-        //your change action goes here
-        for(let idx in languages){
-          let lang = languages[idx];
-          let code = lang_codes[idx];
-          if(lang.match(RegExp(val,'i')))
-            button_div.innerHTML += `<button class='btn btn-secondary' onclick="show_lang('${code}')" data-dismiss='modal' style='margin:10px; width:120px; text-align: center;'><span class='pl-2'>${lang}</span></button>`;
-      }
-    }
-  });
-
-  function create_buttons(){
-    let button_div = document.getElementById("buttons");
-    for(let idx in languages){
-      let lang = languages[idx];
-      let code = lang_codes[idx];
-      button_div.innerHTML += `<button class='btn btn-secondary' onclick="show_lang('${code}')" data-dismiss='modal' style='margin:10px; width:120px; text-align: center;'><span class='pl-2'>${lang}</span></button>`;
-    }
-  }
-
-  async function translation(text, lang, mode, seamless="") {
-    try{
-      const idx = lang_codes.indexOf(lang)
-      const full_lang = languages[idx]
-      console.log(idx, full_lang)
-      const res = await fetch("http://127.0.0.1:8765/translate", {
-        method: "POST",
-        body: JSON.stringify({
-          text: text,
-          src_lang: "English",
-          tgt_lang: full_lang,
-          mode: mode,
-          seamless : seamless
-        }),
-        headers: {"Content-Type": "application/json; charsetUTF-8"}
-      });
-
-      // error check
-      if (!res.ok) {
-        throw new Error(`HTTP error! Status: ${res.status}`);
-      }
-
-      const data = await res.json()
-      return data.translated_text
-
-    } catch (error) {
-      return ""
-    }
-  }
-
-  async function mark(trans1, trans2, lang) {
-    try{
-      const res = await fetch("http://127.0.0.1:8765/mark", {
-        method: "POST",
-        body: JSON.stringify({
-          seamless : trans1,
-          prompt : trans2,
-          lang : lang
-        }),
-        headers: {"Content-Type": "application/json; charsetUTF-8"}
-      });
-
-      // error check
-      if (!res.ok) {
-        throw new Error(`HTTP error! Status: ${res.status}`);
-      }
-
-      const data = await res.json()
-      return data.marked_translations
-     } catch (error) {
-      return []
-    }
-
-  }
-
-  async function show_lang(lang){
-    hide_all();
-    console.log(lang);
-
-    if (lang != "en"){
-      // translate title to the target language
-      // const seamlessTranslatedTitle = await translation("{{$paper.title}}", lang, "/?mode=direct")
-      // document.getElementById(lang+"_title").innerHTML = seamlessTranslatedTitle;
-
-      document.getElementById(lang+"_title").innerHTML = "{{$paper.title}}"
-      $("#"+lang+"_title").show();
-      // temporary loading text
-      const idx = lang_codes.indexOf(lang)
-      const full_lang = languages[idx]
-      document.getElementById(lang+"_abstract").innerHTML = 'Translating to ' + full_lang + '...'
-      $("#"+lang+"_abstract").show();
-
-      // translate abstract to target language
-      if ('{{$paper.abstract_html}}'){
-        const seamlessTranslatedAbstract = await translation("{{$paper.abstract_html}}", lang, "direct")
-        const promptTranslatedAbstract = await translation("{{$paper.abstract_html}}", lang, "term_aware", seamlessTranslatedAbstract)
-
-        const transList = await mark(seamlessTranslatedAbstract, promptTranslatedAbstract, lang)
-
-        if (transList != []){
-          if (lang == "ar"){
-            document.getElementById(lang+"_abstract").innerHTML =
-            `<div style="width: 100%; display: table;">
-                <div style="display: table-row">
-                  <div style="display: table-cell; padding: 5px"> <b>Seamless</b> </div>
-                  <div style="display: table-cell; padding: 5px"> <b>Prompt Refinement</b> </div>
-                </div>
-                <div style="display: table-row">
-                    <div dir="rtl" align="right" style="width: 50%; display: table-cell; padding: 10px">${transList[0]}</div>
-                    <div dir="rtl" align="right" style="display: table-cell; padding: 10px">${transList[1]}</div>
-                </div>
-            </div>`
-          } else {
-            document.getElementById(lang+"_abstract").innerHTML =
-            `<div style="width: 100%; display: table;">
-                <div style="display: table-row">
-                  <div style="display: table-cell; padding: 5px"> <b>Seamless</b> </div>
-                  <div style="display: table-cell; padding: 5px"> <b>Prompt Refinement</b> </div>
-                </div>
-                <div style="display: table-row">
-                    <div style="width: 50%; display: table-cell; padding: 10px">${transList[0]}</div>
-                    <div style="display: table-cell; padding: 10px">${transList[1]}</div>
-                </div>
-            </div>`
-          }
-        }
-        else {
-          document.getElementById(lang+"_abstract").innerHTML = "Error"
-        }
-      }
-
-    }
-
-    $("#"+lang+"_abstract").show();
-  }
-
-  function hide_all(){
-    for (let x in lang_codes){
-        let code = lang_codes[x];
-        $("#"+code+"_abstract").hide();
-        $("#"+code+"_title").hide();
-    }
-  }
-
 
   $( document ).ready(function() {
       if ($(".btn-filesaver")) {
@@ -497,6 +337,201 @@
 
     window.open(url, "_blank");
   }
+</script>
+
+<script>
+
+  let lang_codes = ['ar', 'zh', 'en', 'fr', 'ja', 'ru']
+  let languages = ['Arabic', 'Chinese', 'English', 'French', 'Japanese', 'Russian']
+
+  $( document ).ready(function() {
+      create_buttons();
+      if (ClipboardJS.isSupported()) {
+          success_fn = function(e) {
+              // turns button into "copy successful"-style for 2 seconds
+              var src = $(e.trigger);
+              src.toggleClass("btn-success");
+              src.children("i").toggleClass("far fa-clipboard fas fa-clipboard-check");
+              e.clearSelection();
+
+              setTimeout(function() {
+                  src.toggleClass("btn-success");
+                  src.children("i").toggleClass("far fa-clipboard fas fa-clipboard-check");
+              }, 2000);
+          };
+
+          var clipboard = new ClipboardJS(".btn-clipboard");
+          clipboard.on('success', success_fn);
+          $(".btn-clipboard").removeClass("d-none");
+
+          // buttons outside the "cite" popup can't copy the content the usual way
+          // because the content element is hidden at the time; therefore we fetch
+          // and return the text to be copied manually
+          var clipboard_outside = new ClipboardJS(".btn-clipboard-outside", {
+              text: function(trigger) {
+                  var target = trigger.getAttribute("data-clipboard-target");
+                  return $(target).text();
+              }
+          });
+          clipboard_outside.on('success', success_fn);
+          $(".btn-clipboard-outside").removeClass("d-none");
+      }
+  });
+
+  // translation functions
+
+  $("#lang_query").on("input", function(e) {
+      var input = $(this);
+      var val = input.val();
+      let button_div = document.getElementById("buttons");
+      button_div.innerHTML = "";
+
+      if (input.data("lastval") != val) {
+        input.data("lastval", val);
+
+        //your change action goes here
+        for(let idx in languages){
+          let lang = languages[idx];
+          let code = lang_codes[idx];
+          if(lang.match(RegExp(val,'i')))
+            button_div.innerHTML += `<button class='btn btn-secondary' onclick="show_lang('${code}')" data-dismiss='modal' style='margin:10px; width:120px; text-align: center;'><span class='pl-2'>${lang}</span></button>`;
+      }
+    }
+  });
+
+  function create_buttons(){
+    let button_div = document.getElementById("buttons");
+    for(let idx in languages){
+      let lang = languages[idx];
+      let code = lang_codes[idx];
+      button_div.innerHTML += `<button class='btn btn-secondary' onclick="show_lang('${code}')" data-dismiss='modal' style='margin:10px; width:120px; text-align: center;'><span class='pl-2'>${lang}</span></button>`;
+    }
+  }
+
+  async function translation(text, lang, mode, seamless="") {
+    try{
+      const idx = lang_codes.indexOf(lang)
+      const full_lang = languages[idx]
+      console.log(idx, full_lang)
+      const res = await fetch("http://127.0.0.1:8765/translate", {
+        method: "POST",
+        body: JSON.stringify({
+          text: text,
+          src_lang: "English",
+          tgt_lang: full_lang,
+          mode: mode,
+          seamless : seamless
+        }),
+        headers: {"Content-Type": "application/json; charsetUTF-8"}
+      });
+
+      // error check
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
+
+      const data = await res.json()
+      return data.translated_text
+
+    } catch (error) {
+      return ""
+    }
+  }
+
+  async function mark(trans1, trans2, lang) {
+    try{
+      const res = await fetch("http://127.0.0.1:8765/mark", {
+        method: "POST",
+        body: JSON.stringify({
+          seamless : trans1,
+          prompt : trans2,
+          lang : lang
+        }),
+        headers: {"Content-Type": "application/json; charsetUTF-8"}
+      });
+
+      // error check
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
+
+      const data = await res.json()
+      return data.marked_translations
+     } catch (error) {
+      return []
+    }
+
+  }
+
+  async function show_lang(lang){
+    hide_all();
+    console.log(lang);
+
+    if (lang != "en"){
+      // translate title to the target language
+      // const seamlessTranslatedTitle = await translation("{{$paper.title}}", lang, "/?mode=direct")
+      // document.getElementById(lang+"_title").innerHTML = seamlessTranslatedTitle;
+
+      document.getElementById(lang+"_title").innerHTML = "{{$paper.title}}"
+      $("#"+lang+"_title").show();
+      // temporary loading text
+      const idx = lang_codes.indexOf(lang)
+      const full_lang = languages[idx]
+      document.getElementById(lang+"_abstract").innerHTML = 'Translating to ' + full_lang + '...'
+      $("#"+lang+"_abstract").show();
+
+      // translate abstract to target language
+      if ('{{$paper.abstract_html}}'){
+        const seamlessTranslatedAbstract = await translation("{{$paper.abstract_html}}", lang, "direct")
+        const promptTranslatedAbstract = await translation("{{$paper.abstract_html}}", lang, "term_aware", seamlessTranslatedAbstract)
+
+        const transList = await mark(seamlessTranslatedAbstract, promptTranslatedAbstract, lang)
+
+        if (transList != []){
+          if (lang == "ar"){
+            document.getElementById(lang+"_abstract").innerHTML =
+            `<div style="width: 100%; display: table;">
+                <div style="display: table-row">
+                  <div style="display: table-cell; padding: 5px"> <b>Seamless</b> </div>
+                  <div style="display: table-cell; padding: 5px"> <b>Prompt Refinement</b> </div>
+                </div>
+                <div style="display: table-row">
+                    <div dir="rtl" align="right" style="width: 50%; display: table-cell; padding: 10px">${transList[0]}</div>
+                    <div dir="rtl" align="right" style="display: table-cell; padding: 10px">${transList[1]}</div>
+                </div>
+            </div>`
+          } else {
+            document.getElementById(lang+"_abstract").innerHTML =
+            `<div style="width: 100%; display: table;">
+                <div style="display: table-row">
+                  <div style="display: table-cell; padding: 5px"> <b>Seamless</b> </div>
+                  <div style="display: table-cell; padding: 5px"> <b>Prompt Refinement</b> </div>
+                </div>
+                <div style="display: table-row">
+                    <div style="width: 50%; display: table-cell; padding: 10px">${transList[0]}</div>
+                    <div style="display: table-cell; padding: 10px">${transList[1]}</div>
+                </div>
+            </div>`
+          }
+        }
+        else {
+          document.getElementById(lang+"_abstract").innerHTML = "Error"
+        }
+      }
+
+    }
+
+    $("#"+lang+"_abstract").show();
+  }
+
+  function hide_all(){
+    for (let x in lang_codes){
+        let code = lang_codes[x];
+        $("#"+code+"_abstract").hide();
+        $("#"+code+"_title").hide();
+    }
+  }
+  
 </script>
 <!-- {{ end }} -->
 {{ end }}

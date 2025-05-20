@@ -168,6 +168,7 @@ bib:	build/.bib
 
 #######################################################
 # Disable citation targets (except for 3 bibtex per volume) by setting NOBIB=true
+NOBIB=true
 ifeq (true, $(NOBIB))
 $(info WARNING: not creating full citation materials; this is not suitable for release!)
 build/.bib:
