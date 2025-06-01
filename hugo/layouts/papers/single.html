@@ -465,9 +465,6 @@
     console.log(lang);
 
     if (lang != "en"){
-      // translate title to the target language
-      // const seamlessTranslatedTitle = await translation("{{$paper.title}}", lang, "/?mode=direct")
-      // document.getElementById(lang+"_title").innerHTML = seamlessTranslatedTitle;
 
       document.getElementById(lang+"_title").innerHTML = "{{$paper.title}}"
       $("#"+lang+"_title").show();
@@ -478,9 +475,9 @@
       $("#"+lang+"_abstract").show();
 
       // translate abstract to target language
-      if ('{{$paper.abstract_html}}'){
-        const seamlessTranslatedAbstract = await translation("{{$paper.abstract_html}}", lang, "direct")
-        const promptTranslatedAbstract = await translation("{{$paper.abstract_html}}", lang, "term_aware", seamlessTranslatedAbstract)
+      if ('{{$paper.abstract_raw}}'){
+        const seamlessTranslatedAbstract = await translation("{{$paper.abstract_raw}}", lang, "direct")
+        const promptTranslatedAbstract = await translation("{{$paper.abstract_raw}}", lang, "term_aware", seamlessTranslatedAbstract)
 
         const transList = await mark(seamlessTranslatedAbstract, promptTranslatedAbstract, lang)
 
