@@ -10,8 +10,18 @@ The original home of this repository is <https://github.com/acl-org/acl-antholog
 checkout the original repo for details on how to build and run the ACL anthology
 locally in order to preview this demo.
 
+**TLDR** of running/building server:
+```
+make clean
+make all
+make serve
+```
+
+There are no special requirments that this modified version of the website needs - some 
+features have been disabled in this repo's Make file because they aren't relevant to the demo.
+
 For the translation feature to work, you need to run the server from
-<https://github.com/ImanOu123/multilingual-model-card/tree/iman/multilingualmc/server>
+<https://github.com/jiarui-liu/MultilingualAITerminology/tree/main/server>
 first. This demonstration relies on the server being run from http://127.0.0.1:8765.
 
 The main changes of the translation feature are implemented in
