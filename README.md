@@ -17,7 +17,7 @@ make all
 make serve
 ```
 
-There are no special requirments that this modified version of the website needs - some 
+There are no special requirements that this modified version of the website needs - some 
 features have been disabled in this repo's Make file because they aren't relevant to the demo.
 
 For the translation feature to work, you need to run the server from
@@ -26,5 +26,4 @@ first. This demonstration relies on the server being run from http://127.0.0.1:8
 
 The main changes of the translation feature are implemented in
 [/hugo/layouts/papers/single.html](https://github.com/ImanOu123/acl-anthology-mod/blob/master/hugo/layouts/papers/single.html).
-Most of the other changes to the original repo are to remove the other papers not included
-in this demo.
+Most of the other changes to the original repo are to remove the other papers not included in this demo.
